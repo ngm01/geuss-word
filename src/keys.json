@@ -1,0 +1,148 @@
+[
+    [
+        {
+            "kind": "letter",
+            "display": "Q",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "W",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "E",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "R",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "T",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "Y",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "U",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "I",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "O",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "P",
+            "used": false
+        }
+    ],
+    [
+        {
+            "kind": "letter",
+            "display": "A",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "S",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "D",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "F",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "G",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "H",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "J",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "K",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "L",
+            "used": false
+        }
+    ],
+    [
+        {
+            "kind": "action",
+            "display": "ENTER",
+            "used": null
+        },
+        {
+            "kind": "letter",
+            "display": "Z",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "X",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "C",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "V",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "B",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "N",
+            "used": false
+        },
+        {
+            "kind": "letter",
+            "display": "M",
+            "used": false
+        },
+        {
+            "kind": "action",
+            "display": "DELETE",
+            "used": null
+        }
+    ]
+]

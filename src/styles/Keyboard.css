@@ -1,0 +1,22 @@
+.keyboard {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.keyboardRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: .25rem auto;
+}
+
+.keyboardKey {
+    padding: 1rem;
+    margin: auto .1rem;
+    background-color: #818384;
+    color: #fff;
+
+}
+
