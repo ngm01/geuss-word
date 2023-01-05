@@ -3,7 +3,7 @@ import '../styles/WordBoard.css';
 import { useState, useRef } from "react";
 
 export default function Board(props) {
-    console.log("the board:",props.guess);
+    //console.log("the board:",props.guess);
     return ( 
         <div className="wordBoard">
             {

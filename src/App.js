@@ -8,22 +8,18 @@ import utils from './utilFunctions';
 function App() {
 
   const [word, setTodaysWord] = useState('PLACE');
-  const [guesses, updateGuesses] = useState([]);
+  const [guesses, updateGuesses] = useState(['', '', '', '', '', '']);
   const [progress, updateProgress] = useState(0);
-
-  useEffect(() => {
-    updateGuesses(state => {
-      return new Array(6).fill('');
-    })
-  }, [])
+  console.log("component is (re)rendering...");
 
   useEffect(() => {
     function handleKeyDown(event) {
-      console.log("running this handler...")
       if(utils.isAlpha(event.key)) {
+        console.log("running handleKeyDown...")
         event.preventDefault();
         const key = event.key.toUpperCase();
         updateGuesses(state => {
+          console.log("updating guesses. key:", key)
           let currentGuess = state[progress];
           if(currentGuess.length < 5) {
             currentGuess = currentGuess + key;
@@ -56,19 +52,22 @@ function App() {
       } else {
         // do nothing...
       }
-      console.log(guesses);
+      console.log("guess:", guesses[progress]);
     }
+    console.log("adding event listener...")
     document.addEventListener('keydown', handleKeyDown);
 
     return function cleanUp() {
+      console.log("cleaning up...")
       document.removeEventListener('keydown', handleKeyDown);
     }
 
-  }, [guesses, progress, word])
+  }, [guesses, updateGuesses, progress, word]);
 
 
   return (
     <div className="App">
+      {guesses[0]}
       <Header />
       <Board guesses={guesses} />
       <Keyboard />
