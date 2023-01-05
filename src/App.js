@@ -18,31 +18,29 @@ function App() {
         console.log("running handleKeyDown...")
         event.preventDefault();
         const key = event.key.toUpperCase();
-        updateGuesses(state => {
+        updateGuesses(guesses.map((guess, i) => {
           console.log("updating guesses. key:", key)
-          let currentGuess = state[progress];
-          if(currentGuess.length < 5) {
-            currentGuess = currentGuess + key;
+          if(i === progress && guess.length < 5) {
+            return guess + key;
           }
-          state[progress] = currentGuess;
-          return state;
-        })
+          return guess;
+        }))
       }  else if(utils.isEnterOrDelete(event.key)) {
         event.preventDefault();
         if(event.key.toUpperCase() === 'BACKSPACE') {
-          updateGuesses(state => {
-            let currentGuess = state[progress];
-            if(currentGuess.length > 0) {
-              state[progress] = currentGuess.slice(0, currentGuess.length - 1);              
-            };
-            return state;
-          })
+          updateGuesses(guesses.map((guess, i) => {
+            if(i === progress && guess.length > 0) {
+              return guess.slice(0, guess.length - 1)
+            }
+            return guess;
+          }))
         } else if (event.key.toUpperCase() === 'ENTER') {
           if(guesses[progress].length < 5) {
             alert("Not enough letters")
           } else {
             if(guesses[progress].toUpperCase() !== word) {
               alert("WRONG");
+              updateProgress(progress + 1);
             }
             if(guesses[progress].toUpperCase() === word) {
               alert("You did it!");
@@ -67,7 +65,6 @@ function App() {
 
   return (
     <div className="App">
-      {guesses[0]}
       <Header />
       <Board guesses={guesses} />
       <Keyboard />
