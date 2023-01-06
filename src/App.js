@@ -7,10 +7,22 @@ import utils from './utilFunctions';
 
 function App() {
 
-  const [word, setTodaysWord] = useState('PLACE');
+  const [word, setTodaysWord] = useState([]);
   const [guesses, updateGuesses] = useState(['', '', '', '', '', '']);
   const [progress, updateProgress] = useState(0);
   console.log("component is (re)rendering...");
+
+  useEffect(() => {
+    // this to be supplied by API call...
+    utils.getTodaysWord().then(res => {
+        console.log("the secret word is:", res.word);
+        let wordArray = res.word.split('').map(letter => {
+          return {letter: letter, isFound: false}
+        })
+        setTodaysWord(wordArray);
+    });
+
+  }, [setTodaysWord])
 
   useEffect(() => {
     function handleKeyDown(event) {
@@ -50,7 +62,8 @@ function App() {
       } else {
         // do nothing...
       }
-      console.log("guess:", guesses[progress]);
+      console.log("word:", word)
+      console.log("guesses:", guesses)
     }
     console.log("adding event listener...")
     document.addEventListener('keydown', handleKeyDown);
@@ -64,7 +77,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="App"> 
       <Header />
       <Board guesses={guesses} />
       <Keyboard />

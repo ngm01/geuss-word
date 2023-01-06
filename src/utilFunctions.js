@@ -8,6 +8,12 @@ const utils = {
     isEnterOrDelete: function(key) {
         const upperCase = key.toUpperCase();
         return upperCase === 'ENTER' || upperCase === 'BACKSPACE';
+    },
+    // FAKE API CALL
+    getTodaysWord: function() {
+        return new Promise((resolve, reject) => {
+            setTimeout(resolve({word: 'PLACE'}), Math.random() * 1000)
+          })
     }
 }
 
