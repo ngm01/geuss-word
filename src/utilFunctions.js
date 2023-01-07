@@ -14,6 +14,9 @@ const utils = {
         return new Promise((resolve, reject) => {
             setTimeout(resolve({word: 'PLACE'}), Math.random() * 1000)
           })
+    },
+    getWordFromArray: function(array) {
+        return array.flatMap(letter => letter.letter).join('');
     }
 }
 

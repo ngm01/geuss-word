@@ -4,18 +4,17 @@ import { forwardRef } from "react";
 
 const WordRow = forwardRef((props, ref) => {
     function generateSquares(guess) {
-        let guessLetters = [];
+        const emptyLetter = {letter: '', inWord: false, inPosition: false};
         if(guess === null) {
-            guessLetters = new Array(5).fill('');
+            guess = new Array(5).fill(emptyLetter);
         } else {
-            guessLetters = guess.split('');
-            if(guessLetters.length < 5) {
-                let extraSpaces = new Array(5 - guessLetters.length).fill('');
-                guessLetters = guessLetters.concat(extraSpaces);
+            if(guess.length < 5) {
+                let extraSpaces = new Array(5 - guess.length).fill(emptyLetter);
+                guess = guess.concat(extraSpaces);
             }
         }
-        return guessLetters.map((letter, i) => {
-            return <LetterSquare key={i} letter={letter} />
+        return guess.map((letter, i) => {
+            return <LetterSquare key={i} letter={letter.letter} />
         })
     }
 

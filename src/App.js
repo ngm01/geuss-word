@@ -8,12 +8,12 @@ import utils from './utilFunctions';
 function App() {
 
   const [word, setTodaysWord] = useState([]);
-  const [guesses, updateGuesses] = useState(['', '', '', '', '', '']);
+  const [guesses, updateGuesses] = useState([[], [], [], [], [], []]);
   const [progress, updateProgress] = useState(0);
   console.log("component is (re)rendering...");
 
   useEffect(() => {
-    // this to be supplied by API call...
+    // stand-in for API call in prod
     utils.getTodaysWord().then(res => {
         console.log("the secret word is:", res.word);
         let wordArray = res.word.split('').map(letter => {
@@ -32,8 +32,10 @@ function App() {
         const key = event.key.toUpperCase();
         updateGuesses(guesses.map((guess, i) => {
           console.log("updating guesses. key:", key)
-          if(i === progress && guess.length < 5) {
-            return guess + key;
+          if(i === progress) {
+            if(guess.length < 5){
+                return [...guess, {letter: key, inWord: false, inPosition: false}]
+              }
           }
           return guess;
         }))
@@ -50,11 +52,16 @@ function App() {
           if(guesses[progress].length < 5) {
             alert("Not enough letters")
           } else {
-            if(guesses[progress].toUpperCase() !== word) {
-              alert("WRONG");
-              updateProgress(progress + 1);
+            if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
+              if(progress < 5) {
+                alert("WRONG, GUESS AGAIN");
+                updateProgress(progress + 1);
+              } else {
+                alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
+                console.log("The secret word was:", utils.getWordFromArray(word))
+              }
             }
-            if(guesses[progress].toUpperCase() === word) {
+            if(utils.getWordFromArray(guesses[progress]) === utils.getWordFromArray(word)) {
               alert("You did it!");
             }
           }
@@ -62,8 +69,6 @@ function App() {
       } else {
         // do nothing...
       }
-      console.log("word:", word)
-      console.log("guesses:", guesses)
     }
     console.log("adding event listener...")
     document.addEventListener('keydown', handleKeyDown);
