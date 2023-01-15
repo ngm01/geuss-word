@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useImmer } from 'use-immer';
 import './App.css';
 import Board from './components/Board';
 import Header from './components/Header';
@@ -7,8 +8,8 @@ import utils from './utilFunctions';
 
 function App() {
 
-  const [word, setTodaysWord] = useState([]);
-  const [guesses, updateGuesses] = useState([[], [], [], [], [], []]);
+  const [word, setTodaysWord] = useImmer([]);
+  const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [progress, updateProgress] = useState(0);
   console.log("component is (re)rendering...");
 
@@ -55,6 +56,29 @@ function App() {
             if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
               if(progress < 5) {
                 alert("WRONG, GUESS AGAIN");
+                let reviewedGuesses = guesses.map((guess, index) => {
+                  if(index === progress) {
+                    guess.forEach((guessLetter, guessLetterIdx) => {
+                    const letterToMatch = guessLetter.letter;
+                    const indexOfWordLetter = word.findIndex(letter => letter.letter === letterToMatch && letter.isFound === false);
+                    if(indexOfWordLetter !== -1) {
+                      if(guessLetterIdx === indexOfWordLetter) {
+                        return {
+                          ...guessLetter,
+                          inWord: true,
+                          inPosition: true
+                        }
+                      } else {
+                        return {
+                          ...guessLetter,
+                          inWord: true
+                        }
+                      }
+                    }	
+                    return guess;
+                    })
+                  }	
+                })
                 updateProgress(progress + 1);
               } else {
                 alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
