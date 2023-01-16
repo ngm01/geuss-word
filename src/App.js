@@ -28,11 +28,9 @@ function App() {
   useEffect(() => {
     function handleKeyDown(event) {
       if(utils.isAlpha(event.key)) {
-        console.log("running handleKeyDown...")
         event.preventDefault();
         const key = event.key.toUpperCase();
         updateGuesses(guesses.map((guess, i) => {
-          console.log("updating guesses. key:", key)
           if(i === progress) {
             if(guess.length < 5){
                 return [...guess, {letter: key, inWord: false, inPosition: false}]
@@ -56,36 +54,33 @@ function App() {
             if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
               if(progress < 5) {
                 alert("WRONG, GUESS AGAIN");
-                let reviewedGuesses = guesses.map((guess, index) => {
-                  if(index === progress) {
-                    guess.forEach((guessLetter, guessLetterIdx) => {
-                    const letterToMatch = guessLetter.letter;
-                    const indexOfWordLetter = word.findIndex(letter => letter.letter === letterToMatch && letter.isFound === false);
-                    if(indexOfWordLetter !== -1) {
-                      if(guessLetterIdx === indexOfWordLetter) {
-                        return {
-                          ...guessLetter,
-                          inWord: true,
-                          inPosition: true
-                        }
-                      } else {
-                        return {
-                          ...guessLetter,
-                          inWord: true
-                        }
+                updateGuesses(draft => {
+                  let currentGuess = draft[progress];
+                  for(let i = 0; i < currentGuess.length; i++) {
+                    let letterToMatch = currentGuess[i];
+                    const indexOfMatch = word.findIndex(letter => letter.letter === letterToMatch.letter);  //  && letter.isFound === false
+                    if(indexOfMatch !== -1) {
+                      //setTodaysWord(wordDraft => {wordDraft[i].isFound = true});
+                      currentGuess[i].inWord = true;
+                      if(indexOfMatch === i) {
+                        currentGuess[i].inPosition = true;
                       }
-                    }	
-                    return guess;
-                    })
-                  }	
+                    }
+                  }
                 })
                 updateProgress(progress + 1);
               } else {
                 alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
-                console.log("The secret word was:", utils.getWordFromArray(word))
               }
             }
             if(utils.getWordFromArray(guesses[progress]) === utils.getWordFromArray(word)) {
+              updateGuesses(draft => {
+                let currentGuess = draft[progress];
+                for(let i = 0; i < currentGuess.length; i++) {
+                  currentGuess[i].inWord = true;
+                  currentGuess[i].inPosition = true;
+                }
+              })
               alert("You did it!");
             }
           }
@@ -94,11 +89,11 @@ function App() {
         // do nothing...
       }
     }
-    console.log("adding event listener...")
+    //console.log("adding event listener...")
     document.addEventListener('keydown', handleKeyDown);
 
     return function cleanUp() {
-      console.log("cleaning up...")
+      //console.log("cleaning up...")
       document.removeEventListener('keydown', handleKeyDown);
     }
 

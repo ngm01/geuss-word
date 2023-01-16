@@ -1,8 +1,9 @@
 import '../styles/LetterSquare.css';
 
 function LetterSquare(props) {
+    const colorClass = (!props.letter.inWord) ? 'nada' : (!props.letter.inPosition) ? 'yellow' : 'green';
     return ( 
-        <div className='letterSquare'>{props.letter}</div>
+        <div className={`letterSquare ${colorClass}`}>{props.letter.letter}</div>
      );
 }
 

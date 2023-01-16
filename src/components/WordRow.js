@@ -14,7 +14,7 @@ const WordRow = forwardRef((props, ref) => {
             }
         }
         return guess.map((letter, i) => {
-            return <LetterSquare key={i} letter={letter.letter} />
+            return <LetterSquare key={i} letter={letter} />
         })
     }
 
