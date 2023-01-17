@@ -5,6 +5,12 @@
     font-weight: bold;
     height: 1rem;
     width: 1rem;
+    transition: transform 3s;
+    transform-style: preserve-3d;
+}
+
+.rotate {
+    transform: rotateX(360deg);
 }
 
 .yellow {

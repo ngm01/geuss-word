@@ -53,7 +53,6 @@ function App() {
           } else {
             if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
               if(progress < 5) {
-                alert("WRONG, GUESS AGAIN");
                 updateGuesses(draft => {
                   let currentGuess = draft[progress];
                   for(let i = 0; i < currentGuess.length; i++) {
