@@ -9,37 +9,37 @@
 
 .rotate-1 {
     transition: transform 1s, background-color 1s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
 .rotate-2 {
     transition: transform 1.25s, background-color 1.25s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
 .rotate-3 {
     transition: transform 1.5s, background-color 1.5s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
 .rotate-4 {
     transition: transform 1.75s, background-color 1.75s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
 .rotate-5 {
     transition: transform 2s, background-color 2s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
 .rotate-6 {
     transition: transform 2.25s, background-color 2.25s;
-    transform: rotateX(360deg);
+    transform: rotateY(360deg);
     transform-style: preserve-3d;
 }
 
