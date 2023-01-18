@@ -102,7 +102,7 @@ function App() {
   return (
     <div className="App"> 
       <Header />
-      <Board guesses={guesses} />
+      <Board guesses={guesses} progress={progress} />
       <Keyboard />
     </div>
   );

@@ -1,6 +1,5 @@
 import WordRow from "./WordRow";
 import '../styles/WordBoard.css';
-import { useState, useRef } from "react";
 
 export default function Board(props) {
     return ( 
@@ -10,6 +9,7 @@ export default function Board(props) {
                     <WordRow
                         key={i} 
                         guess={guess}
+                        rotate={(i === props.progress - 1)}
                     />)
             }
         </div>

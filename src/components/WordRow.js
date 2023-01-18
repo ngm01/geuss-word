@@ -3,6 +3,7 @@ import '../styles/WordRow.css';
 import { forwardRef } from "react";
 
 const WordRow = forwardRef((props, ref) => {
+
     function generateSquares(guess) {
         const emptyLetter = {letter: '', inWord: false, inPosition: false};
         if(guess === null) {
@@ -14,7 +15,7 @@ const WordRow = forwardRef((props, ref) => {
             }
         }
         return guess.map((letter, i) => {
-            return <LetterSquare key={i} letter={letter} />
+            return <LetterSquare rotate={props.rotate} speed={i} key={i} letter={letter} />
         })
     }
 
