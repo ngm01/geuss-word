@@ -100,13 +100,14 @@ function App() {
       let currentGuess = draft[progress];
       for(let i = 0; i < currentGuess.length; i++) {
         let letterToMatch = currentGuess[i];
-        const indexOfMatch = letterList.findIndex(letter => letter === letterToMatch.letter);
+        const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
         if(indexOfMatch !== -1) {
-          letterList.splice(indexOfMatch, 1);
+          console.log(letterList);
           currentGuess[i].inWord = true;
           if(indexOfMatch === i) {
             currentGuess[i].inPosition = true;
           }
+          letterList.splice(indexOfMatch, 1);
         }
       }
     })

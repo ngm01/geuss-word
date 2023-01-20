@@ -11,8 +11,10 @@ const utils = {
     },
     // FAKE API CALL
     getTodaysWord: function() {
+        const wordList = ['PLACE', 'ALTER', 'MOUSE', 'COUPE'];
+        const rando = Math.floor(Math.random() * (4 - 0) + 0)
         return new Promise((resolve, reject) => {
-            setTimeout(resolve({word: 'ALTER'}), Math.random() * 1000)
+            setTimeout(resolve({word: wordList[rando]}), Math.random() * 1000)
           })
     },
     getWordFromArray: function(array) {
