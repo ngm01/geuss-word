@@ -12,21 +12,19 @@ function App() {
   const [word, setTodaysWord] = useImmer([]);
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [progress, updateProgress] = useState(0);
-  console.log("component is (re)rendering...");
+  //console.log("component is (re)rendering...");
 
   useEffect(() => {
     // stand-in for API call in prod
     utils.getTodaysWord().then(res => {
-        console.log("the secret word is:", res.word);
-        let wordArray = res.word.split('').map(letter => {
-          return {letter: letter, isFound: false}
-        })
-        setTodaysWord(wordArray);
+        //console.log("the secret word is:", res.word);
+        setTodaysWord(res.word.split(''));
     });
 
   }, [setTodaysWord])
 
   useEffect(() => {
+    // set up keydown handler
     function handleKeyDown(event) {
       // allow for keyboard commands
       if((event.ctrlKey || event.metaKey)){
@@ -56,14 +54,14 @@ function App() {
         if(guesses[progress].length < 5) {
           alert("Not enough letters")
         } else {
-          if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
+          if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
             if(progress < 5) {
               guessWord();
             } else {
-              alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
+              alert(`Sorry, you're out of guesses. The secret word was: ${word.join('')}}`)
             }
           }
-          if(utils.getWordFromArray(guesses[progress]) === utils.getWordFromArray(word)) {
+          if(utils.getWordFromArray(guesses[progress]) === word.join('')) {
             displaySuccess();
             window.setTimeout(function(){
               alert("You did it!");
@@ -98,12 +96,13 @@ function App() {
 
   function guessWord() {
     updateGuesses(draft => {
+      let letterList = [...word];
       let currentGuess = draft[progress];
       for(let i = 0; i < currentGuess.length; i++) {
         let letterToMatch = currentGuess[i];
-        const indexOfMatch = word.findIndex(letter => letter.letter === letterToMatch.letter);  //  && letter.isFound === false
+        const indexOfMatch = letterList.findIndex(letter => letter === letterToMatch.letter);
         if(indexOfMatch !== -1) {
-          //setTodaysWord(wordDraft => {wordDraft[i].isFound = true});
+          letterList.splice(indexOfMatch, 1);
           currentGuess[i].inWord = true;
           if(indexOfMatch === i) {
             currentGuess[i].inPosition = true;

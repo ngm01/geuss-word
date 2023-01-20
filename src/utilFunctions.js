@@ -12,7 +12,7 @@ const utils = {
     // FAKE API CALL
     getTodaysWord: function() {
         return new Promise((resolve, reject) => {
-            setTimeout(resolve({word: 'PLACE'}), Math.random() * 1000)
+            setTimeout(resolve({word: 'ALTER'}), Math.random() * 1000)
           })
     },
     getWordFromArray: function(array) {
