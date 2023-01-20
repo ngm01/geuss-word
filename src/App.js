@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 import { useImmer } from 'use-immer';
 import './App.css';
@@ -27,35 +28,12 @@ function App() {
 
   useEffect(() => {
     function handleKeyDown(event) {
-      if(utils.isAlpha(event.key)) {
-        event.preventDefault();
-        const key = event.key.toUpperCase();
-        addLetter(key);
-      }  else if(utils.isEnterOrDelete(event.key)) {
-        event.preventDefault();
-        if(event.key.toUpperCase() === 'BACKSPACE') {
-          removeLetter();
-        } else if (event.key.toUpperCase() === 'ENTER') {
-          if(guesses[progress].length < 5) {
-            alert("Not enough letters")
-          } else {
-            if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
-              if(progress < 5) {
-                guessWord();
-              } else {
-                alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
-              }
-            }
-            if(utils.getWordFromArray(guesses[progress]) === utils.getWordFromArray(word)) {
-              displaySuccess();
-              window.setTimeout(function(){
-                alert("You did it!");
-              }, 1000)
-            }
-          }
-        }
+      // allow for keyboard commands
+      if((event.ctrlKey || event.metaKey)){
+        return;
       } else {
-        // do nothing...
+        event.preventDefault();
+        processInput(event.key);
       }
     }
 
@@ -65,8 +43,38 @@ function App() {
       document.removeEventListener('keydown', handleKeyDown);
     }
 
-  }, [guesses, addLetter, removeLetter, guessWord, displaySuccess, progress, word]);
+  }, [processInput]);
 
+  function processInput(inputKey) {
+    if(utils.isAlpha(inputKey)) {
+      const key = inputKey.toUpperCase();
+      addLetter(key);
+    }  else if(utils.isEnterOrDelete(inputKey)) {
+      if(inputKey.toUpperCase() === 'BACKSPACE') {
+        removeLetter();
+      } else if (inputKey.toUpperCase() === 'ENTER') {
+        if(guesses[progress].length < 5) {
+          alert("Not enough letters")
+        } else {
+          if(utils.getWordFromArray(guesses[progress]) !== utils.getWordFromArray(word)) {
+            if(progress < 5) {
+              guessWord();
+            } else {
+              alert(`Sorry, you're out of guesses. The secret word was: ${utils.getWordFromArray(word)}`)
+            }
+          }
+          if(utils.getWordFromArray(guesses[progress]) === utils.getWordFromArray(word)) {
+            displaySuccess();
+            window.setTimeout(function(){
+              alert("You did it!");
+            }, 1000)
+          }
+        }
+      }
+    } else {
+      // do nothing...
+    }
+  }
 
   function addLetter(key) {
     updateGuesses(guesses.map((guess, i) => {
@@ -117,12 +125,11 @@ function App() {
     updateProgress(progress + 1);
   }
 
-
   return (
     <div className="App"> 
       <Header />
       <Board guesses={guesses} progress={progress} />
-      <Keyboard addLetter={addLetter} />
+      <Keyboard processInput={processInput} />
     </div>
   );
 }

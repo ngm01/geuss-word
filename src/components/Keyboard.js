@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import '../styles/Keyboard.css';
-import utils from "../utilFunctions";
 import keysDictionary from '../keys.json';
 
 function Keyboard(props) {
@@ -9,8 +8,13 @@ function Keyboard(props) {
     // console.log("keys:", keys)
 
     function handleKeyboardClick(event) {
-        console.log("clicked:", event.target.innerText);
-        props.addLetter(event.target.innerText)
+        let input;
+        if(event.target.innerText === 'DELETE') {
+            input = "BACKSPACE"
+        } else {
+            input = event.target.innerText;
+        }
+        props.processInput(input);
     }
 
     return ( 
