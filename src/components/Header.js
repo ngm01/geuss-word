@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/Header.css";
 import LetterSquare from "./LetterSquare";
 
@@ -18,18 +18,31 @@ function Header() {
         {letter: 'K', inPosition: false, inWord: false},
     ]);
 
-    window.setTimeout(function(){
-        setTitleA(titleA.map(letter => {return {...letter, inPosition: true, inWord: true}}))
-    }, 1500)
-    window.setTimeout(function(){
-        setTitleB(titleB.map(letter => {
-            if(letter.letter === 'K') {
-                return {...letter, inPosition: false, inWord: true}
-            } else {
-                return {...letter, inPosition: true, inWord: true}
-            }
-        }))
-    }, 2500)
+    useEffect(() => {
+        window.setTimeout(function(){
+            setTitleA(titleA.map(letterObj => {return {...letterObj, inPosition: true, inWord: true}}))
+        }, 1000)
+        window.setTimeout(function(){
+            setTitleB(titleB.map(letterObj => {
+                console.log("first is firing...")
+                if(letterObj.letter === 'K') {
+                    return {...letterObj, inPosition: false, inWord: true}
+                } else {
+                    return {...letterObj, inPosition: true, inWord: true}
+                }
+            }))
+        }, 2000)
+        window.setTimeout(function(){
+            setTitleB(titleB.map(letterObj => {
+                console.log("second is firing...")
+                if(letterObj.letter === 'K') {
+                    return {letter: 'D', inWord: true, inPosition: true}
+                } else {
+                    return {...letterObj, inPosition: true, inWord: true}
+                }
+            }))
+        }, 2500)
+    }, [])
 
     return ( 
         <div className="header">
@@ -43,7 +56,6 @@ function Header() {
                 <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
             )}
             </div>
-            <p><em>TODO:</em> 'K' flips to become 'D'</p>
         </div>
      );
 }

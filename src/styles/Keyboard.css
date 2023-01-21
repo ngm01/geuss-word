@@ -17,12 +17,14 @@
     margin: auto .1rem;
     background-color: #818384;
     color: #fff;
+    font-weight: bold;
+    border-radius: .25rem;
 
 }
 
 @media (max-width: 420px)  {
     .keyboardKey {
-        padding: .65rem;
+        padding: 1rem 0.55rem;
     }
 }
 
