@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "../styles/Header.css";
 import LetterSquare from "./LetterSquare";
 
@@ -35,12 +35,12 @@ function Header() {
         <div className="header">
             <div className="title">
             {titleA.map((letter, i) =>
-                <LetterSquare rotate={letter.inWord} key={i} speed={i} letter={letter} />
+                <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
             )}
             </div>
             <div className="title">
             {titleB.map((letter, i) =>  
-                <LetterSquare rotate={letter.inWord} key={i} speed={i} letter={letter} />
+                <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
             )}
             </div>
             <p><em>TODO:</em> 'K' flips to become 'D'</p>
