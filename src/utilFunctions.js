@@ -1,3 +1,6 @@
+import { answers } from "./words/allowed_answers";
+import { guesses } from "./words/allowed_guesses";
+
 const utils = {
     isAlpha: function(str) {
         // TODO: need to intercept the "command" key (which produces str = 'Meta')
@@ -9,13 +12,14 @@ const utils = {
         const upperCase = key.toUpperCase();
         return upperCase === 'ENTER' || upperCase === 'BACKSPACE';
     },
-    // FAKE API CALL
     getTodaysWord: function() {
-        const wordList = ['PLACE', 'ALTER', 'MOUSE', 'COUPE'];
-        const rando = Math.floor(Math.random() * (4 - 0) + 0)
+        const rando = Math.floor(Math.random() * (answers.length - 0) + 0)
         return new Promise((resolve, reject) => {
-            setTimeout(resolve({word: wordList[rando]}), Math.random() * 1000)
+            setTimeout(resolve({word: answers[rando]}), Math.random() * 1000)
           })
+    },
+    isAllowedGuess: function(guess) {
+        return guesses.includes(this.getWordFromArray(guess));
     },
     getWordFromArray: function(array) {
         return array.flatMap(letter => letter.letter).join('');

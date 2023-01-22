@@ -17,7 +17,7 @@ function App() {
   useEffect(() => {
     // stand-in for API call in prod
     utils.getTodaysWord().then(res => {
-        //console.log("the secret word is:", res.word);
+        console.log("the secret word is:", res.word);
         setTodaysWord(res.word.split(''));
     });
 
@@ -95,23 +95,27 @@ function App() {
   }
 
   function guessWord() {
-    updateGuesses(draft => {
-      let letterList = [...word];
-      let currentGuess = draft[progress];
-      for(let i = 0; i < currentGuess.length; i++) {
-        let letterToMatch = currentGuess[i];
-        const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
-        if(indexOfMatch !== -1) {
-          console.log(letterList);
-          currentGuess[i].inWord = true;
-          if(indexOfMatch === i) {
-            currentGuess[i].inPosition = true;
+    if(utils.isAllowedGuess(guesses[progress])) {
+      updateGuesses(draft => {
+        let letterList = [...word];
+        let currentGuess = draft[progress];
+        for(let i = 0; i < currentGuess.length; i++) {
+          let letterToMatch = currentGuess[i];
+          const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
+          if(indexOfMatch !== -1) {
+            console.log(letterList);
+            currentGuess[i].inWord = true;
+            if(indexOfMatch === i) {
+              currentGuess[i].inPosition = true;
+            }
+            letterList.splice(indexOfMatch, 1);
           }
-          letterList.splice(indexOfMatch, 1);
         }
-      }
-    })
-    updateProgress(progress + 1);
+      })
+      updateProgress(progress + 1);
+    } else {
+      alert("Not in word list")
+    }
   }
 
   function displaySuccess() {
