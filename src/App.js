@@ -5,6 +5,7 @@ import './App.css';
 import Board from './components/Board';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard';
+import ToastMessage from './components/ToastMessage';
 import utils from './utilFunctions';
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [word, setTodaysWord] = useImmer([]);
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [progress, updateProgress] = useState(0);
+  const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
   //console.log("component is (re)rendering...");
 
   useEffect(() => {
@@ -52,20 +54,27 @@ function App() {
         removeLetter();
       } else if (inputKey.toUpperCase() === 'ENTER') {
         if(guesses[progress].length < 5) {
-          alert("Not enough letters")
+          updateToast({message: "Not enough letters", show: true})
+          window.setTimeout(function(){
+            updateToast(toast => {return {...toast, show: false}})
+          }, 3000)
         } else {
           if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
             if(progress < 5) {
               guessWord();
             } else {
-              alert(`Sorry, you're out of guesses. The secret word was: ${word.join('')}}`)
+              updateToast({message: `Sorry, you're out of guesses. The secret word was: ${word.join('')}.`, show: true})
+              window.setTimeout(function(){
+                updateToast(toast => {return {...toast, show: false}})
+              }, 5000)
             }
           }
           if(utils.getWordFromArray(guesses[progress]) === word.join('')) {
             displaySuccess();
+            updateToast({message: 'Correct!', show: true})
             window.setTimeout(function(){
-              alert("You did it!");
-            }, 1000)
+              updateToast(toast => {return {...toast, show: false}})
+            }, 3000)
           }
         }
       }
@@ -100,10 +109,10 @@ function App() {
         let letterList = [...word];
         let currentGuess = draft[progress];
         for(let i = 0; i < currentGuess.length; i++) {
+          console.log("letterList:", letterList);
           let letterToMatch = currentGuess[i];
           const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
-          if(indexOfMatch !== -1) {
-            console.log(letterList);
+          if(indexOfMatch !== -1 && letterList.includes(letterToMatch.letter)) {
             currentGuess[i].inWord = true;
             if(indexOfMatch === i) {
               currentGuess[i].inPosition = true;
@@ -114,7 +123,10 @@ function App() {
       })
       updateProgress(progress + 1);
     } else {
-      alert("Not in word list")
+      updateToast({message: "Not in word list", show: true})
+      window.setTimeout(function(){
+        updateToast(toast => {return {...toast, show: false}})
+      }, 5000)
     }
   }
 
@@ -130,7 +142,8 @@ function App() {
   }
 
   return (
-    <div className="App"> 
+    <div className="app">
+      <ToastMessage show={toast.show} message={toast.message} /> 
       <Header />
       <Board guesses={guesses} progress={progress} />
       <Keyboard processInput={processInput} />
