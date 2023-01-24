@@ -9,6 +9,7 @@ export default function Board(props) {
                     <WordRow
                         key={i} 
                         guess={guess}
+                        shake={props.shake && i === props.progress}
                         rotate={(i === props.progress - 1)}
                     />)
             }

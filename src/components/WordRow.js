@@ -20,7 +20,7 @@ const WordRow = forwardRef((props, ref) => {
     }
 
     return ( 
-        <div ref={ref} className="wordRow">
+        <div ref={ref} className={`wordRow ${props.shake ? 'shake' : ''}`}>
             {generateSquares(props.guess)};
         </div>
      );

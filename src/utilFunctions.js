@@ -19,8 +19,7 @@ const utils = {
           })
     },
     isAllowedGuess: function(guess) {
-        return true;
-        //return guesses.includes(this.getWordFromArray(guess));
+        return guesses.includes(this.getWordFromArray(guess));
     },
     getWordFromArray: function(array) {
         return array.flatMap(letter => letter.letter).join('');

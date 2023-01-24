@@ -4,6 +4,17 @@
     padding: .5rem;
 }
 
+.shake {
+    animation: shakeRow 0.15s;
+    animation-iteration-count: 3;
+}
+
+@keyframes shakeRow {
+    0% { transform: translateX(0); }
+    50% { transform: translateX(-1rem); }
+    100% { transform: translateX(1rem); }
+}
+
 @media (max-width: 420px)  {
     .wordRow {
         padding: .25rem .5rem;

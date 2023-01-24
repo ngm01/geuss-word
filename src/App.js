@@ -14,12 +14,13 @@ function App() {
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
+  const [shake, setShake] = useState(false);
   //console.log("component is (re)rendering...");
 
   useEffect(() => {
     // stand-in for API call in prod
     utils.getTodaysWord().then(res => {
-        console.log("the secret word is:", res.word);
+        //console.log("the secret word is:", res.word);
         setTodaysWord(res.word.split(''));
     });
 
@@ -55,8 +56,10 @@ function App() {
       } else if (inputKey.toUpperCase() === 'ENTER') {
         if(guesses[progress].length < 5) {
           updateToast({message: "Not enough letters", show: true})
+          setShake(true);
           window.setTimeout(function(){
             updateToast(toast => {return {...toast, show: false}})
+            setShake(false);
           }, 3000)
         } else {
           if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
@@ -109,7 +112,6 @@ function App() {
         let letterList = [...word];
         let currentGuess = draft[progress];
         for(let i = 0; i < currentGuess.length; i++) {
-          console.log("letterList:", letterList);
           let letterToMatch = currentGuess[i];
           const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
           if(indexOfMatch !== -1 && letterList.includes(letterToMatch.letter)) {
@@ -124,8 +126,10 @@ function App() {
       updateProgress(progress + 1);
     } else {
       updateToast({message: "Not in word list", show: true})
+      setShake(true)
       window.setTimeout(function(){
         updateToast(toast => {return {...toast, show: false}})
+        setShake(false)
       }, 5000)
     }
   }
@@ -145,7 +149,7 @@ function App() {
     <div className="app">
       <ToastMessage show={toast.show} message={toast.message} /> 
       <Header />
-      <Board guesses={guesses} progress={progress} />
+      <Board shake={shake} guesses={guesses} progress={progress} />
       <Keyboard processInput={processInput} />
     </div>
   );
