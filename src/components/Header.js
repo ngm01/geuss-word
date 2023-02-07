@@ -24,7 +24,6 @@ function Header() {
         }, 1000)
         window.setTimeout(function(){
             setTitleB(titleB.map(letterObj => {
-                console.log("first is firing...")
                 if(letterObj.letter === 'K') {
                     return {...letterObj, inPosition: false, inWord: true}
                 } else {
@@ -34,7 +33,6 @@ function Header() {
         }, 2000)
         window.setTimeout(function(){
             setTitleB(titleB.map(letterObj => {
-                console.log("second is firing...")
                 if(letterObj.letter === 'K') {
                     return {letter: 'D', inWord: true, inPosition: true}
                 } else {
@@ -42,6 +40,7 @@ function Header() {
                 }
             }))
         }, 2500)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return ( 

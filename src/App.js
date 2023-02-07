@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useImmer } from 'use-immer';
 import './App.css';
 import Board from './components/Board';
@@ -15,16 +15,25 @@ function App() {
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
   const [shake, setShake] = useState(false);
+  const didGuess = useRef(false);
   //console.log("component is (re)rendering...");
 
   useEffect(() => {
-    // stand-in for API call in prod
-    utils.getTodaysWord().then(res => {
-        //console.log("the secret word is:", res.word);
-        setTodaysWord(res.word.split(''));
-    });
+    fetch(process.env.REACT_APP_BASE_URL)
+      .then(res => res.json()).then(data => {
+        setTodaysWord(data.Items[0].word.split(''));
+        const storageGuesses = localStorage.getItem('guesses');
+        if(storageGuesses !== null) {
+          const parsedStorage = JSON.parse(storageGuesses);
+          const resumeProgress = parsedStorage.reduce((acc, current) => {
+            return acc + (current.length > 0 ? 1 : 0);
+          }, 0)
+          updateProgress(resumeProgress);
+          updateGuesses(parsedStorage);
+        }
 
-  }, [setTodaysWord])
+      })
+  }, [])
 
   useEffect(() => {
     // set up keydown handler
@@ -45,6 +54,14 @@ function App() {
     }
 
   }, [processInput]);
+
+  // update guesses in localStorage on each re-render
+  useEffect(() => {
+    if(guesses[0].length > 0 && didGuess.current) {
+      localStorage.setItem('guesses', JSON.stringify(guesses));
+      didGuess.current = false; 
+    }
+  }, [guesses])
 
   function processInput(inputKey) {
     if(utils.isAlpha(inputKey)) {
@@ -123,6 +140,7 @@ function App() {
           }
         }
       })
+      didGuess.current = true;
       updateProgress(progress + 1);
     } else {
       updateToast({message: "Not in word list", show: true})

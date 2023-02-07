@@ -21,7 +21,7 @@ const WordRow = forwardRef((props, ref) => {
 
     return ( 
         <div ref={ref} className={`wordRow ${props.shake ? 'shake' : ''}`}>
-            {generateSquares(props.guess)};
+            {generateSquares(props.guess)}
         </div>
      );
 })
