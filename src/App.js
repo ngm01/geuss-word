@@ -23,15 +23,24 @@ function App() {
       .then(res => res.json()).then(data => {
         setTodaysWord(data.Items[0].word.split(''));
         const storageGuesses = localStorage.getItem('guesses');
-        if(storageGuesses !== null) {
-          const parsedStorage = JSON.parse(storageGuesses);
-          const resumeProgress = parsedStorage.reduce((acc, current) => {
-            return acc + (current.length > 0 ? 1 : 0);
-          }, 0)
-          updateProgress(resumeProgress);
-          updateGuesses(parsedStorage);
+        const storageDate = localStorage.getItem('date');
+        if(storageDate === null) {
+          localStorage.setItem('date', data.Items[0].date);
+        } else {
+          const today = new Date().toLocaleDateString('en-US', { timeZone: 'EST' })
+          if(storageDate === today) {
+            if(storageGuesses !== null) {
+              const parsedStorage = JSON.parse(storageGuesses);
+              const resumeProgress = parsedStorage.reduce((acc, current) => {
+                return acc + (current.length > 0 ? 1 : 0);
+              }, 0)
+              updateProgress(resumeProgress);
+              updateGuesses(parsedStorage);
+            }
+          } else {
+            localStorage.setItem('date', data.Items[0].date)
+          }
         }
-
       })
   }, [])
 
