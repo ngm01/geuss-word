@@ -27,8 +27,8 @@ function App() {
         if(storageDate === null) {
           localStorage.setItem('date', data.Items[0].date);
         } else {
-          const today = new Date().toLocaleDateString('en-US', { timeZone: 'EST' })
-          if(storageDate === today) {
+          //const today = new Date().toLocaleDateString('en-US', { timeZone: 'EST' })
+          if(storageDate === data.Items[0].date) {
             if(storageGuesses !== null) {
               const parsedStorage = JSON.parse(storageGuesses);
               const resumeProgress = parsedStorage.reduce((acc, current) => {
@@ -38,7 +38,8 @@ function App() {
               updateGuesses(parsedStorage);
             }
           } else {
-            localStorage.setItem('date', data.Items[0].date)
+            localStorage.setItem('guesses', guesses);
+            localStorage.setItem('date', data.Items[0].date);
           }
         }
       })
