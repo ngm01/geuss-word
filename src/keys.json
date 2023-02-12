@@ -3,146 +3,202 @@
         {
             "kind": "letter",
             "display": "Q",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "W",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "E",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "R",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "T",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "Y",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "U",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "I",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "O",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "P",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         }
     ],
     [
         {
             "kind": "letter",
             "display": "A",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "S",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "D",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "F",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "G",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "H",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "J",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "K",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "L",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         }
     ],
     [
         {
             "kind": "action",
             "display": "ENTER",
-            "used": null
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "Z",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "X",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "C",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "V",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "B",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "N",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "letter",
             "display": "M",
-            "used": false
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         },
         {
             "kind": "action",
             "display": "DELETE",
-            "used": null
+            "used": false,
+            "inWord": false,
+            "inPosition": false
         }
     ]
 ]

@@ -6,12 +6,14 @@ import Board from './components/Board';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard';
 import ToastMessage from './components/ToastMessage';
+import keysDictionary from './keys.json';
 import utils from './utilFunctions';
 
 function App() {
 
   const [word, setTodaysWord] = useImmer([]);
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
+  const [keys, updateKeys] = useImmer(keysDictionary);
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
   const [shake, setShake] = useState(false);
@@ -56,19 +58,34 @@ function App() {
         processInput(event.key);
       }
     }
-
     document.addEventListener('keydown', handleKeyDown);
-
     return function cleanUp() {
       document.removeEventListener('keydown', handleKeyDown);
     }
-
   }, [processInput]);
 
-  // update guesses in localStorage on each re-render
+  // update guesses, keys in localStorage on each re-render
   useEffect(() => {
     if(guesses[0].length > 0 && didGuess.current) {
-      localStorage.setItem('guesses', JSON.stringify(guesses));
+      localStorage.setItem('guesses', JSON.stringify(guesses)); 
+      updateKeys(draft => {
+        const currentGuess = guesses[progress];
+        for(let r = 0; r < draft.length; r++) {
+          const updatedRow = draft[r].map((key) => {
+            const usedLetter = currentGuess.find(square => square.letter === key.display);
+            if(usedLetter !== undefined) {
+              if(!key.used) {
+                return {...key, used: true, inWord: usedLetter.inWord, inPosition: usedLetter.inPosition}
+              }
+            } else {
+              return key;
+            }
+          })
+          draft[r] = updatedRow;
+        }
+      })
+      localStorage.setItem('keys', keys);
+      updateProgress(progress + 1);
       didGuess.current = false; 
     }
   }, [guesses])
@@ -151,7 +168,6 @@ function App() {
         }
       })
       didGuess.current = true;
-      updateProgress(progress + 1);
     } else {
       updateToast({message: "Not in word list", show: true})
       setShake(true)
@@ -178,7 +194,7 @@ function App() {
       <ToastMessage show={toast.show} message={toast.message} /> 
       <Header />
       <Board shake={shake} guesses={guesses} progress={progress} />
-      <Keyboard processInput={processInput} />
+      <Keyboard keys={keys} processInput={processInput} />
     </div>
   );
 }

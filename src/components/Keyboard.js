@@ -1,11 +1,6 @@
-import { useState } from "react";
 import '../styles/Keyboard.css';
-import keysDictionary from '../keys.json';
 
 function Keyboard(props) {
-
-    const [keys] = useState(keysDictionary)
-    // console.log("keys:", keys)
 
     function handleKeyboardClick(event) {
         let input;
@@ -17,14 +12,18 @@ function Keyboard(props) {
         props.processInput(input);
     }
 
+    function getColor(key) {
+        return key.inPosition ? 'inPosition' : key.inWord ? 'inWord' : key.used ? 'used' : '';
+    }
+
     return ( 
         <div className="keyboard">
-            {keys.map((row, idx) => {
+            {props.keys.map((row, idx) => {
                 return <div key={idx} className="keyboardRow">
-                    {row.map(keybordKey => {
-                        return <div onClick={handleKeyboardClick} className="keyboardKey" 
-                                key={keybordKey.display}>
-                                    {keybordKey.display}
+                    {row.map(keyboardKey => {
+                        return <div onClick={handleKeyboardClick} className={`keyboardKey ${getColor(keyboardKey)} `} 
+                                key={keyboardKey.display}>
+                                    {keyboardKey.display}
                                 </div>
                     })}
                 </div>
