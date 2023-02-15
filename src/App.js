@@ -12,13 +12,25 @@ import utils from './utilFunctions';
 function App() {
 
   const [word, setTodaysWord] = useImmer([]);
+  /*
+    'guesses' is an array of 'guess' arrays, each 'guess' array corresponding to a row on the board
+    objects in this array correspond to letters in the row:
+    {
+      letter: 'A',
+      inWord: false,
+      inPosition: false
+    }
+    when user hits enter to guess the word, letters are eval'd based on whether they are in the word,
+    and if so whether they are in the correct position
+    logic for this is in guessWord() function below
+  */
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [keys, updateKeys] = useImmer(keysDictionary);
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
   const [shake, setShake] = useState(false);
+  const [isSolved, setIsSolved] = useState(false);
   const didGuess = useRef(false);
-  //console.log("component is (re)rendering...");
 
   useEffect(() => {
     fetch(process.env.REACT_APP_BASE_URL)
@@ -26,21 +38,26 @@ function App() {
         setTodaysWord(data.Items[0].word.split(''));
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
+        const storageKeys = localStorage.getItem('keys');
         if(storageDate === null) {
           localStorage.setItem('date', data.Items[0].date);
         } else {
-          //const today = new Date().toLocaleDateString('en-US', { timeZone: 'EST' })
           if(storageDate === data.Items[0].date) {
             if(storageGuesses !== null) {
-              const parsedStorage = JSON.parse(storageGuesses);
-              const resumeProgress = parsedStorage.reduce((acc, current) => {
-                return acc + (current.length > 0 ? 1 : 0);
-              }, 0)
+              const parsedGuesses = JSON.parse(storageGuesses);
+              const parsedKeys = JSON.parse(storageKeys);
+              // get current guess attempt from stored guesses
+              const resumeProgress = parsedGuesses.findLastIndex(g => g.length > 0) + 1;
+              // is the current guess the solution? (solution will have all letters marked 'inPosition')
+              const solved = (parsedGuesses[resumeProgress - 1].filter(g => !g.inPosition).length === 0);
               updateProgress(resumeProgress);
-              updateGuesses(parsedStorage);
+              updateGuesses(parsedGuesses);
+              updateKeys(parsedKeys);
+              setIsSolved(solved);
             }
           } else {
-            localStorage.setItem('guesses', guesses);
+            localStorage.setItem('guesses', JSON.stringify(guesses));
+            localStorage.setItem('keys', JSON.stringify(keys));
             localStorage.setItem('date', data.Items[0].date);
           }
         }
@@ -76,6 +93,8 @@ function App() {
             if(usedLetter !== undefined) {
               if(!key.used) {
                 return {...key, used: true, inWord: usedLetter.inWord, inPosition: usedLetter.inPosition}
+              } else {
+                return key;
               }
             } else {
               return key;
@@ -84,50 +103,58 @@ function App() {
           draft[r] = updatedRow;
         }
       })
-      localStorage.setItem('keys', keys);
       updateProgress(progress + 1);
-      didGuess.current = false; 
+      //didGuess.current = false; 
     }
   }, [guesses])
 
+  useEffect(() => {
+    if(didGuess.current) {
+      localStorage.setItem('keys', JSON.stringify(keys));
+      didGuess.current = false; 
+    }
+  }, [keys])
+
   function processInput(inputKey) {
-    if(utils.isAlpha(inputKey)) {
-      const key = inputKey.toUpperCase();
-      addLetter(key);
-    }  else if(utils.isEnterOrDelete(inputKey)) {
-      if(inputKey.toUpperCase() === 'BACKSPACE') {
-        removeLetter();
-      } else if (inputKey.toUpperCase() === 'ENTER') {
-        if(guesses[progress].length < 5) {
-          updateToast({message: "Not enough letters", show: true})
-          setShake(true);
-          window.setTimeout(function(){
-            updateToast(toast => {return {...toast, show: false}})
-            setShake(false);
-          }, 3000)
-        } else {
-          if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
-            if(progress < 5) {
-              guessWord();
-            } else {
-              updateToast({message: `Sorry, you're out of guesses. The secret word was: ${word.join('')}.`, show: true})
-              window.setTimeout(function(){
-                updateToast(toast => {return {...toast, show: false}})
-              }, 5000)
-            }
-          }
-          if(utils.getWordFromArray(guesses[progress]) === word.join('')) {
-            displaySuccess();
-            updateToast({message: 'Correct!', show: true})
+    if(!isSolved) {
+      if(utils.isAlpha(inputKey)) {
+        const key = inputKey.toUpperCase();
+        addLetter(key);
+      }  else if(utils.isEnterOrDelete(inputKey)) {
+        if(inputKey.toUpperCase() === 'BACKSPACE') {
+          removeLetter();
+        } else if (inputKey.toUpperCase() === 'ENTER') {
+          if(guesses[progress].length < 5) {
+            updateToast({message: "Not enough letters", show: true})
+            setShake(true);
             window.setTimeout(function(){
               updateToast(toast => {return {...toast, show: false}})
+              setShake(false);
             }, 3000)
+          } else {
+            if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
+              if(progress < 5) {
+                guessWord();
+              } else {
+                updateToast({message: `Sorry, you're out of guesses. The secret word was: ${word.join('')}.`, show: true})
+                window.setTimeout(function(){
+                  updateToast(toast => {return {...toast, show: false}})
+                }, 5000)
+              }
+            }
+            if(utils.getWordFromArray(guesses[progress]) === word.join('')) {
+              displaySuccess();
+              updateToast({message: 'Correct!', show: true})
+              window.setTimeout(function(){
+                updateToast(toast => {return {...toast, show: false}})
+              }, 3000)
+            }
           }
         }
+      } else {
+        // do nothing...
       }
-    } else {
-      // do nothing...
-    }
+  }
   }
 
   function addLetter(key) {
@@ -163,7 +190,7 @@ function App() {
             if(indexOfMatch === i) {
               currentGuess[i].inPosition = true;
             }
-            letterList.splice(indexOfMatch, 1);
+            letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
           }
         }
       })
@@ -186,7 +213,8 @@ function App() {
         currentGuess[i].inPosition = true;
       }
     })
-    updateProgress(progress + 1);
+    didGuess.current = true;
+    setIsSolved(true);
   }
 
   return (

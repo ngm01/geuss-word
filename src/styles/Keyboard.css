@@ -15,22 +15,22 @@
 .keyboardKey {
     padding: 1rem;
     margin: auto .1rem;
-    background-color: #818384;
+    background-color: #6b6d6e;
     color: #fff;
     font-weight: bold;
     border-radius: .25rem;
 }
 
 .used {
-    background-color: black;
+    background-color: #262626;
 }
 
 .inWord {
-    background-color: #b59f3b;
+    background-color: #ccb033;
 }
 
 .inPosition {
-    background-color: #538d4e;
+    background-color: #4ea346;
 }
 
 @media (max-width: 420px)  {
