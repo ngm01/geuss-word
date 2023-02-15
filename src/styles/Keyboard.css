@@ -33,9 +33,15 @@
     background-color: #4ea346;
 }
 
-@media (max-width: 420px)  {
+@media (max-width: 375px)  {
     .keyboardKey {
         padding: 1rem 0.55rem;
+    }
+}
+
+@media (max-width: 420px)  {
+    .keyboardKey {
+        padding: 2rem 0.65rem;
     }
 }
 
