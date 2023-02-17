@@ -33,7 +33,7 @@ function App() {
   const didGuess = useRef(false);
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_BASE_URL)
+    fetch('https://7hf5905yka.execute-api.us-east-2.amazonaws.com/default/guessword-getter-v1')
       .then(res => res.json()).then(data => {
         setTodaysWord(data.Items[0].word.split(''));
         const storageGuesses = localStorage.getItem('guesses');
