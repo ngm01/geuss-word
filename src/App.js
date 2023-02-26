@@ -5,6 +5,7 @@ import './App.css';
 import Board from './components/Board';
 import Header from './components/Header';
 import Keyboard from './components/Keyboard';
+import Stats from './components/Stats';
 import ToastMessage from './components/ToastMessage';
 import keysDictionary from './keys.json';
 import utils from './utilFunctions';
@@ -28,6 +29,7 @@ function App() {
   const [keys, updateKeys] = useImmer(keysDictionary);
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
+  const [showStats, updateShowStats] = useState(false);
   const [shake, setShake] = useState(false);
   const [isSolved, setIsSolved] = useState(false);
   const didGuess = useRef(false);
@@ -247,7 +249,8 @@ function App() {
   return (
     <div className="app">
       <ToastMessage show={toast.show} message={toast.message} /> 
-      <Header />
+      <Stats show={showStats} updateShowStats={updateShowStats} />
+      <Header updateShowStats={updateShowStats} />
       <Board shake={shake} guesses={guesses} progress={progress} />
       <Keyboard keys={keys} processInput={processInput} />
     </div>

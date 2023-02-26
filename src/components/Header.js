@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "../styles/Header.css";
 import LetterSquare from "./LetterSquare";
 
-function Header() {
+function Header(props) {
 
     const [titleA, setTitleA] = useState([
         {letter: 'G', inPosition: false, inWord: false},
@@ -43,17 +43,26 @@ function Header() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    function showStats() {
+        props.updateShowStats(true);
+    }
+
     return ( 
         <div className="header">
             <div className="title">
-            {titleA.map((letter, i) =>
-                <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
-            )}
+                <div className="titleRow">
+                {titleA.map((letter, i) =>
+                    <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
+                )}
+                </div>
+                <div className="titleRow">
+                {titleB.map((letter, i) =>  
+                    <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
+                )}
+                </div>
             </div>
-            <div className="title">
-            {titleB.map((letter, i) =>  
-                <LetterSquare small={true} rotate={letter.inWord} key={i} speed={i} letter={letter} />
-            )}
+            <div className="statsButton" onClick={showStats}>
+            📈
             </div>
         </div>
      );
