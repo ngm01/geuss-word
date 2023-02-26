@@ -11,7 +11,7 @@ import utils from './utilFunctions';
 
 function App() {
 
-  const [word, setTodaysWord] = useImmer([]);
+  const [todaysWord, setTodaysWord] = useImmer([]);
   /*
     'guesses' is an array of 'guess' arrays, each 'guess' array corresponding to a row on the board
     objects in this array correspond to letters in the row:
@@ -35,7 +35,8 @@ function App() {
   useEffect(() => {
     fetch('https://7hf5905yka.execute-api.us-east-2.amazonaws.com/default/guessword-getter-v1')
       .then(res => res.json()).then(data => {
-        setTodaysWord(data.Items[0].word.split(''));
+        //setTodaysWord(data.Items[0].word.split(''));
+        setTodaysWord('HALVE'.split(''))
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
         const storageKeys = localStorage.getItem('keys');
@@ -87,20 +88,36 @@ function App() {
       localStorage.setItem('guesses', JSON.stringify(guesses)); 
       updateKeys(draft => {
         const currentGuess = guesses[progress];
-        for(let r = 0; r < draft.length; r++) {
-          const updatedRow = draft[r].map((key) => {
+        for(let row = 0; row < draft.length; row++) {
+          const updatedRow = draft[row].map((key) => {
             const usedLetter = currentGuess.find(square => square.letter === key.display);
             if(usedLetter !== undefined) {
-              if(!key.used) {
-                return {...key, used: true, inWord: usedLetter.inWord, inPosition: usedLetter.inPosition}
-              } else {
-                return key;
+              // sanity check for 'false positives', e.g. in cases where a letter is used more than once in a guess
+              const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), key.display);
+              let finalLetter = usedLetter;
+              if(letterUseInGuess.length > 1) {
+                finalLetter = currentGuess.reduce((obj, letter) => {
+                  if(letter.inWord) {
+                    if('inWord' in obj) {
+                      if(letter.inPosition) {
+                        return letter;
+                      } else {
+                        return obj;
+                      }
+                    } else {
+                      return letter;
+                    }
+                  } else {
+                    return obj;
+                  }
+                }, {})
               }
+              return {...key, used: true, inWord: finalLetter.inWord, inPosition: finalLetter.inPosition}
             } else {
               return key;
             }
           })
-          draft[r] = updatedRow;
+          draft[row] = updatedRow;
         }
       })
       updateProgress(progress + 1);
@@ -132,17 +149,17 @@ function App() {
               setShake(false);
             }, 3000)
           } else {
-            if(utils.getWordFromArray(guesses[progress]) !== word.join('')) {
+            if(utils.getWordFromArray(guesses[progress]) !== todaysWord.join('')) {
               if(progress < 5) {
                 guessWord();
               } else {
-                updateToast({message: `Sorry, you're out of guesses. The secret word was: ${word.join('')}.`, show: true})
+                updateToast({message: `Sorry, you're out of guesses. The secret word was: ${todaysWord.join('')}.`, show: true})
                 window.setTimeout(function(){
                   updateToast(toast => {return {...toast, show: false}})
                 }, 5000)
               }
             }
-            if(utils.getWordFromArray(guesses[progress]) === word.join('')) {
+            if(utils.getWordFromArray(guesses[progress]) === todaysWord.join('')) {
               displaySuccess();
               updateToast({message: 'Correct!', show: true})
               window.setTimeout(function(){
@@ -180,17 +197,30 @@ function App() {
   function guessWord() {
     if(utils.isAllowedGuess(guesses[progress])) {
       updateGuesses(draft => {
-        let letterList = [...word];
+        let letterList = [...todaysWord];
         let currentGuess = draft[progress];
         for(let i = 0; i < currentGuess.length; i++) {
           let letterToMatch = currentGuess[i];
-          const indexOfMatch = word.findIndex(letter => letter === letterToMatch.letter);
+          const indexOfMatch = todaysWord.findIndex(letter => letter === letterToMatch.letter);
           if(indexOfMatch !== -1 && letterList.includes(letterToMatch.letter)) {
-            currentGuess[i].inWord = true;
-            if(indexOfMatch === i) {
-              currentGuess[i].inPosition = true;
-            }
-            letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+              if(indexOfMatch === i) {
+                currentGuess[i].inWord = true;
+                currentGuess[i].inPosition = true;
+                letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+              } else {
+                // ensure that the letter being evaluated is not used elsewhere in the guess.
+                // Trying to avoid a 'false positive' scenario, e.g. if 
+                // todaysWord = 'HALVE' and currentGuess = 'VALVE',
+                // 'V' at currentGuess[0] should not be marked as inWord, and we should continue iterating
+                // over currentGuess until we reach the 'V' at currentGuess[3]
+                const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), letterToMatch.letter)
+                if(!letterUseInGuess.includes(indexOfMatch)) {
+                  currentGuess[i].inWord = true;
+                  letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+                }
+              }
+              console.log("current letterList:", letterList);
+            
           }
         }
       })

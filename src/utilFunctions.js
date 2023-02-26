@@ -23,6 +23,9 @@ const utils = {
     },
     getWordFromArray: function(array) {
         return array.flatMap(letter => letter.letter).join('');
+    },
+    getAllLetterIndices: function(array, testLetter) {
+        return array.map((letter, idx) => letter === testLetter ? idx : '').filter(String)
     }
 }
 
