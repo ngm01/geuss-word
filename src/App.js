@@ -35,8 +35,7 @@ function App() {
   useEffect(() => {
     fetch('https://7hf5905yka.execute-api.us-east-2.amazonaws.com/default/guessword-getter-v1')
       .then(res => res.json()).then(data => {
-        //setTodaysWord(data.Items[0].word.split(''));
-        setTodaysWord('HALVE'.split(''))
+        setTodaysWord(data.Items[0].word.split(''));
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
         const storageKeys = localStorage.getItem('keys');
@@ -203,24 +202,22 @@ function App() {
           let letterToMatch = currentGuess[i];
           const indexOfMatch = todaysWord.findIndex(letter => letter === letterToMatch.letter);
           if(indexOfMatch !== -1 && letterList.includes(letterToMatch.letter)) {
-              if(indexOfMatch === i) {
+            if(indexOfMatch === i) {
+              currentGuess[i].inWord = true;
+              currentGuess[i].inPosition = true;
+              letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+            } else {
+              // ensure that the letter being evaluated is not used elsewhere in the guess.
+              // Trying to avoid a 'false positive' scenario, e.g. if 
+              // todaysWord = 'HALVE' and currentGuess = 'VALVE',
+              // 'V' at currentGuess[0] should not be marked as inWord, and we should continue iterating
+              // over currentGuess until we reach the 'V' at currentGuess[3]
+              const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), letterToMatch.letter)
+              if(!letterUseInGuess.includes(indexOfMatch)) {
                 currentGuess[i].inWord = true;
-                currentGuess[i].inPosition = true;
                 letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
-              } else {
-                // ensure that the letter being evaluated is not used elsewhere in the guess.
-                // Trying to avoid a 'false positive' scenario, e.g. if 
-                // todaysWord = 'HALVE' and currentGuess = 'VALVE',
-                // 'V' at currentGuess[0] should not be marked as inWord, and we should continue iterating
-                // over currentGuess until we reach the 'V' at currentGuess[3]
-                const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), letterToMatch.letter)
-                if(!letterUseInGuess.includes(indexOfMatch)) {
-                  currentGuess[i].inWord = true;
-                  letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
-                }
               }
-              console.log("current letterList:", letterList);
-            
+            }
           }
         }
       })
