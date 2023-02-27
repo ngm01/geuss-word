@@ -20,6 +20,10 @@
     text-align: end;
 }
 
+.statsClose:hover {
+    cursor: pointer;
+}
+
 .statsBody {
     position: relative;
     top: 10vw;

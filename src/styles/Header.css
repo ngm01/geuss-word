@@ -27,6 +27,10 @@
     font-size: x-large;
 }
 
+.statsButton:hover {
+    cursor: pointer;
+}
+
 @media (max-width: 420px) {
     .header {
         padding: .5rem 0;

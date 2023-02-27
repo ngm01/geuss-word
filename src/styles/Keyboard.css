@@ -21,6 +21,10 @@
     border-radius: .25rem;
 }
 
+.keyboardKey:hover {
+    cursor: pointer;
+}
+
 .used {
     background-color: #262626;
 }

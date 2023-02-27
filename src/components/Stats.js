@@ -3,7 +3,6 @@ import "../styles/Stats.css";
 function Stats(props) {
 
     function closeStats() {
-        console.log("updating show stats")
         props.updateShowStats(false)
     }
 
