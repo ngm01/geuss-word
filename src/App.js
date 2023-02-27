@@ -97,7 +97,8 @@ function App() {
               const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), key.display);
               let finalLetter = usedLetter;
               if(letterUseInGuess.length > 1) {
-                finalLetter = currentGuess.reduce((obj, letter) => {
+                finalLetter = currentGuess.filter(letter => letter.letter === finalLetter.letter)
+                .reduce((obj, letter) => {
                   if(letter.inWord) {
                     if('inWord' in obj) {
                       if(letter.inPosition) {
