@@ -37,7 +37,8 @@ function App() {
   useEffect(() => {
     fetch('https://7hf5905yka.execute-api.us-east-2.amazonaws.com/default/guessword-getter-v1')
       .then(res => res.json()).then(data => {
-        setTodaysWord(data.Items[0].word.split(''));
+        //setTodaysWord(data.Items[0].word.split(''));
+        setTodaysWord('BREED'.split(''))
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
         const storageKeys = localStorage.getItem('keys');
@@ -203,12 +204,14 @@ function App() {
         let currentGuess = draft[progress];
         for(let i = 0; i < currentGuess.length; i++) {
           let letterToMatch = currentGuess[i];
-          const indexOfMatch = todaysWord.findIndex(letter => letter === letterToMatch.letter);
+          const indexOfMatch = letterList.findIndex(letter => letter === letterToMatch.letter);
           if(indexOfMatch !== -1 && letterList.includes(letterToMatch.letter)) {
+            console.log(`We got a match of ${currentGuess[i].letter} at index ${i}`)
             if(indexOfMatch === i) {
+              console.log("We should be getting a match at index 3:", i)
               currentGuess[i].inWord = true;
               currentGuess[i].inPosition = true;
-              letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+              letterList.splice(letterList.indexOf(letterToMatch.letter), 1, null);
             } else {
               // ensure that the letter being evaluated is not used elsewhere in the guess.
               // Trying to avoid a 'false positive' scenario, e.g. if 
@@ -218,10 +221,11 @@ function App() {
               const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), letterToMatch.letter)
               if(!letterUseInGuess.includes(indexOfMatch)) {
                 currentGuess[i].inWord = true;
-                letterList.splice(letterList.indexOf(letterToMatch.letter), 1);
+                letterList.splice(letterList.indexOf(letterToMatch.letter), 1, null);
               }
             }
           }
+          console.log("current letterList:", letterList);
         }
       })
       didGuess.current = true;
@@ -231,7 +235,7 @@ function App() {
       window.setTimeout(function(){
         updateToast(toast => {return {...toast, show: false}})
         setShake(false)
-      }, 5000)
+      }, 3000)
     }
   }
 

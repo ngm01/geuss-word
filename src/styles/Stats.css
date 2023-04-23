@@ -1,7 +1,9 @@
 .stats {
-    position: absolute;
+    position: fixed;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     height: 50vh;
     width: 75vw;
     z-index: 200;
@@ -17,7 +19,7 @@
 }
 
 .statsClose {
-    text-align: end;
+    align-self: flex-end;
 }
 
 .statsClose:hover {
@@ -25,17 +27,29 @@
 }
 
 .statsBody {
-    position: relative;
-    top: 10vw;
+    text-align: center;
+    margin: auto 0;
 }
 
-.hide {
+.finePrint {
+    margin-top: auto;
+}
+
+.finePrint p {
+    font-size: xx-small;
+}
+
+.finePrint a {
+    color: lightskyblue;
+}
+
+.hideStats {
     z-index: -1;
     opacity: 0;
     top: -1rem;
 }
 
-.show {
+.showStats {
     opacity: 1;
-    top: 2rem;
+    top: 20%;
 }
