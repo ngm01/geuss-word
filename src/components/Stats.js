@@ -1,34 +1,46 @@
-import { useEffect } from "react";
+import { useRef } from "react";
 import "../styles/Stats.css";
+import StatsBar from "./StatsBar";
 
 function Stats(props) {
 
-    const played = 95;
-    const winsPerGeuss = {
-        1: 0,
-        2: 5,
-        3: 33,
-        4: 28,
-        5: 23,
-        6: 5
+    const stats = {
+        gamesPlayed: 95,
+        gamesWon: 95,
+        guessDistro: {
+            1: 0,
+            2: 5,
+            3: 33,
+            4: 28,
+            5: 23,
+            6: 5
+        }
     }
 
-    useEffect(() => {
-        const boxWidth = document.getElementById('barsBox').getBoundingClientRect().width;
-        for (const key in winsPerGeuss) {
-            calculateBarWidth(key, winsPerGeuss[key], boxWidth)
-        }
-    }, [])
+    const statsBarsBox = useRef(null);
+
+    // const [parentWidth, setParentWidth] = useState(0)
+
+    // useEffect(() => {
+    //     const boxWidth = statsBarsBox.current.getBoundingClientRect().width;
+    //     console.log("boxWidth", boxWidth)
+    //     setParentWidth(boxWidth);
+    // }, [parentWidth])
 
     function closeStats() {
         props.updateShowStats(false)
     }
 
-    function calculateBarWidth(key, wins, boxWidth) {
-        const percentage = wins / played;
-        const barWidth = boxWidth * percentage;
-        document.getElementById(`${key}-bar`).style.width = `${barWidth}px`
-    }
+
+    const bars = Object.keys(stats.guessDistro).map(guessKey => {
+        return <StatsBar 
+                    key={guessKey} 
+                    barLabel={guessKey}
+                    gamesWon={stats.gamesWon}
+                    winsAtGuess={stats.guessDistro[guessKey]}
+                    ref={statsBarsBox}
+                    />
+    })
 
     return ( 
         <div className={`stats ${props.show ? 'showStats' : 'hideStats'}`}>
@@ -36,13 +48,12 @@ function Stats(props) {
                 <div>❌</div>
             </div>
             <div className="statsBody">
-                <div id="barsBox">
-                    <div class="bar" id="1-bar"></div>
-                    <div class="bar" id="2-bar"></div>
-                    <div class="bar" id="3-bar"></div>
-                    <div class="bar" id="4-bar"></div>
-                    <div class="bar" id="5-bar"></div>
-                    <div class="bar" id="6-bar"></div>
+                <div className="basicStats">
+                    <p>Games played: {stats.gamesPlayed}</p>
+                    <p>Win percentage: {(stats.gamesWon / stats.gamesPlayed) * 100}%</p>
+                </div>
+                <div className="barsBox" ref={statsBarsBox}>
+                    {bars}
                 </div>
             </div>
             <div className="finePrint">

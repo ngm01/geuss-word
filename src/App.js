@@ -140,8 +140,10 @@ function App() {
         const key = inputKey.toUpperCase();
         addLetter(key);
       }  else if(utils.isEnterOrDelete(inputKey)) {
+
         if(inputKey.toUpperCase() === 'BACKSPACE') {
           removeLetter();
+
         } else if (inputKey.toUpperCase() === 'ENTER') {
           if(guesses[progress].length < 5) {
             updateToast({message: "Not enough letters", show: true})
@@ -150,6 +152,7 @@ function App() {
               updateToast(toast => {return {...toast, show: false}})
               setShake(false);
             }, 3000)
+
           } else {
             if(utils.getWordFromArray(guesses[progress]) !== todaysWord.join('')) {
               if(progress < 5) {
@@ -161,6 +164,7 @@ function App() {
                 }, 5000)
               }
             }
+            
             if(utils.getWordFromArray(guesses[progress]) === todaysWord.join('')) {
               displaySuccess();
               updateToast({message: 'Correct!', show: true})
