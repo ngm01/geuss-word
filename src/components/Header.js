@@ -61,7 +61,7 @@ function Header(props) {
                 )}
                 </div>
             </div>
-            <div className="statsButton" onClick={showStats}>
+            <div title="gameplay statistics" className="statsButton" onClick={showStats}>
             📈
             </div>
         </div>

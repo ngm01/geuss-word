@@ -1,10 +1,24 @@
+import { useRef } from "react";
 import "../styles/Stats.css";
+import StatsBar from "./StatsBar";
 
 function Stats(props) {
+
+    const statsBarsBox = useRef(null);
 
     function closeStats() {
         props.updateShowStats(false)
     }
+
+    const bars = Object.keys(props.stats.guessDistro).map(guessKey => {
+        return <StatsBar 
+                    key={guessKey} 
+                    barLabel={guessKey}
+                    gamesWon={props.stats.gamesWon}
+                    winsAtGuess={props.stats.guessDistro[guessKey]}
+                    ref={statsBarsBox}
+                    />
+    })
 
     return ( 
         <div className={`stats ${props.show ? 'showStats' : 'hideStats'}`}>
@@ -12,7 +26,13 @@ function Stats(props) {
                 <div>❌</div>
             </div>
             <div className="statsBody">
-                <p>Gameplay statistics coming soon!</p>
+                <div className="basicStats">
+                    <p>Games played: {props.stats.gamesPlayed}</p>
+                    <p>Win percentage: {props.stats.gamesPlayed === 0 ? 0 : (props.stats.gamesWon / props.stats.gamesPlayed) * 100}%</p>
+                </div>
+                <div className="barsBox" ref={statsBarsBox}>
+                    {bars}
+                </div>
             </div>
             <div className="finePrint">
                     <p >Made by <a target="_blank" rel="noreferrer" href="https://ngm01.com">Nathaniel Moore</a></p>

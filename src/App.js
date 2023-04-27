@@ -27,6 +27,18 @@ function App() {
   */
   const [guesses, updateGuesses] = useImmer([[], [], [], [], [], []]);
   const [keys, updateKeys] = useImmer(keysDictionary);
+  const [stats, updateStats] = useImmer({
+    gamesPlayed: 0,
+    gamesWon: 0,
+    guessDistro: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0
+    }
+  })
   const [progress, updateProgress] = useState(0);
   const [toast, updateToast] = useState({show: false, message: 'This is a test!'})
   const [showStats, updateShowStats] = useState(false);
@@ -41,13 +53,16 @@ function App() {
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
         const storageKeys = localStorage.getItem('keys');
+        const storageStats = localStorage.getItem('stats');
         if(storageDate === null) {
           localStorage.setItem('date', data.Items[0].date);
+          localStorage.setItem('stats', JSON.stringify(stats));
         } else {
           if(storageDate === data.Items[0].date) {
             if(storageGuesses !== null) {
               const parsedGuesses = JSON.parse(storageGuesses);
               const parsedKeys = JSON.parse(storageKeys);
+              const parsedStats = JSON.parse(storageStats);
               // get current guess attempt from stored guesses
               const resumeProgress = parsedGuesses.findLastIndex(g => g.length > 0) + 1;
               // is the current guess the solution? (solution will have all letters marked 'inPosition')
@@ -55,12 +70,14 @@ function App() {
               updateProgress(resumeProgress);
               updateGuesses(parsedGuesses);
               updateKeys(parsedKeys);
+              updateStats(parsedStats);
               setIsSolved(solved);
             }
           } else {
             localStorage.setItem('guesses', JSON.stringify(guesses));
             localStorage.setItem('keys', JSON.stringify(keys));
             localStorage.setItem('date', data.Items[0].date);
+            localStorage.setItem('stats', JSON.stringify(stats));
           }
         }
       })
@@ -134,14 +151,23 @@ function App() {
     }
   }, [keys])
 
+  // update storage when stats updated
+  useEffect(() => {
+    if(isSolved) {
+      localStorage.setItem('stats', JSON.stringify(stats));
+    }
+  }, [stats])
+
   function processInput(inputKey) {
     if(!isSolved) {
       if(utils.isAlpha(inputKey)) {
         const key = inputKey.toUpperCase();
         addLetter(key);
       }  else if(utils.isEnterOrDelete(inputKey)) {
+
         if(inputKey.toUpperCase() === 'BACKSPACE') {
           removeLetter();
+
         } else if (inputKey.toUpperCase() === 'ENTER') {
           if(guesses[progress].length < 5) {
             updateToast({message: "Not enough letters", show: true})
@@ -150,8 +176,15 @@ function App() {
               updateToast(toast => {return {...toast, show: false}})
               setShake(false);
             }, 3000)
+
           } else {
-            if(utils.getWordFromArray(guesses[progress]) !== todaysWord.join('')) {
+            if(utils.getWordFromArray(guesses[progress]) === todaysWord.join('')) {
+              displaySuccess();
+              updateToast({message: 'Correct!', show: true})
+              window.setTimeout(function(){
+                updateToast(toast => {return {...toast, show: false}})
+              }, 3000)
+            } else {
               if(progress < 5) {
                 guessWord();
               } else {
@@ -159,14 +192,11 @@ function App() {
                 window.setTimeout(function(){
                   updateToast(toast => {return {...toast, show: false}})
                 }, 5000)
+                updateStats(draft => {
+                  draft.gamesPlayed = draft.gamesPlayed + 1
+                })
+                setIsSolved(true);
               }
-            }
-            if(utils.getWordFromArray(guesses[progress]) === todaysWord.join('')) {
-              displaySuccess();
-              updateToast({message: 'Correct!', show: true})
-              window.setTimeout(function(){
-                updateToast(toast => {return {...toast, show: false}})
-              }, 3000)
             }
           }
         }
@@ -245,12 +275,17 @@ function App() {
     })
     didGuess.current = true;
     setIsSolved(true);
+    updateStats(draft => {
+      draft.gamesPlayed = draft.gamesPlayed + 1;
+      draft.gamesWon = draft.gamesWon + 1;
+      draft.guessDistro[progress + 1] = draft.guessDistro[progress + 1] + 1;
+    })
   }
 
   return (
     <div className="app">
       <ToastMessage show={toast.show} message={toast.message} /> 
-      <Stats show={showStats} updateShowStats={updateShowStats} />
+      <Stats stats={stats} show={showStats} updateShowStats={updateShowStats} />
       <Header updateShowStats={updateShowStats} />
       <Board shake={shake} guesses={guesses} progress={progress} />
       <Keyboard keys={keys} processInput={processInput} />
