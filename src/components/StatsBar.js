@@ -6,10 +6,10 @@ const StatsBar = forwardRef(({barLabel, winsAtGuess, gamesWon}, statsBarsBox) =>
 
     useEffect(() => {
         const parentWidth = statsBarsBox.current.getBoundingClientRect().width;
-        const percentage = winsAtGuess / gamesWon
+        const percentage = gamesWon === 0 ? 0 : winsAtGuess / gamesWon
         setBarWidth((parentWidth - 5) * percentage)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [winsAtGuess])
 
     return ( 
         <div className="statsBar">
