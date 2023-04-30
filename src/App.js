@@ -59,10 +59,11 @@ function App() {
           localStorage.setItem('stats', JSON.stringify(stats));
         } else {
           if(storageDate === data.Items[0].date) {
+            const parsedStats = JSON.parse(storageStats);
+            updateStats(parsedStats);
             if(storageGuesses !== null) {
               const parsedGuesses = JSON.parse(storageGuesses);
               const parsedKeys = JSON.parse(storageKeys);
-              const parsedStats = JSON.parse(storageStats);
               // get current guess attempt from stored guesses
               const resumeProgress = parsedGuesses.findLastIndex(g => g.length > 0) + 1;
               // is the current guess the solution? (solution will have all letters marked 'inPosition')
@@ -70,7 +71,6 @@ function App() {
               updateProgress(resumeProgress);
               updateGuesses(parsedGuesses);
               updateKeys(parsedKeys);
-              updateStats(parsedStats);
               setIsSolved(solved);
             }
           } else {

@@ -36,7 +36,7 @@ function Stats(props) {
             </div>
             <div className="finePrint">
                     <p >Made by <a target="_blank" rel="noreferrer" href="https://ngm01.com">Nathaniel Moore</a></p>
-                    <p>Last updated April 22, 2023</p>
+                    <p>Last updated April 28, 2023</p>
             </div>
         </div>
      );
