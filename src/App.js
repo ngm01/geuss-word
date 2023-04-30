@@ -49,8 +49,7 @@ function App() {
   useEffect(() => {
     fetch('https://7hf5905yka.execute-api.us-east-2.amazonaws.com/default/guessword-getter-v1')
       .then(res => res.json()).then(data => {
-        //setTodaysWord(data.Items[0].word.split(''));
-        setTodaysWord('BERRY'.split(''))
+        setTodaysWord(data.Items[0].word.split(''));
         const storageGuesses = localStorage.getItem('guesses');
         const storageDate = localStorage.getItem('date');
         const storageKeys = localStorage.getItem('keys');
