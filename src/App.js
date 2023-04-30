@@ -58,9 +58,9 @@ function App() {
           localStorage.setItem('date', data.Items[0].date);
           localStorage.setItem('stats', JSON.stringify(stats));
         } else {
+          const parsedStats = JSON.parse(storageStats);
+          updateStats(parsedStats);
           if(storageDate === data.Items[0].date) {
-            const parsedStats = JSON.parse(storageStats);
-            updateStats(parsedStats);
             if(storageGuesses !== null) {
               const parsedGuesses = JSON.parse(storageGuesses);
               const parsedKeys = JSON.parse(storageKeys);
