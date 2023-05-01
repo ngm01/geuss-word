@@ -240,8 +240,12 @@ function App() {
               currentGuess[i].inPosition = true;
               letterList.splice(i, 1, null);
             } else {
-              currentGuess[i].inWord = true;
-              letterList.splice(i, 1, null);
+              const indexOfMatch = letterList.indexOf(currentGuess[i].letter)
+              const letterUseInGuess = utils.getAllLetterIndices(utils.getWordFromArray(currentGuess).split(''), letterToMatch.letter)
+              if(!letterUseInGuess.includes(indexOfMatch)) {
+                currentGuess[i].inWord = true;
+                letterList.splice(letterList.indexOf(letterToMatch.letter), 1, null);
+              }
             }
           }
         }
