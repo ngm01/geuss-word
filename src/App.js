@@ -210,7 +210,7 @@ function App() {
     updateGuesses(guesses.map((guess, i) => {
       if(i === progress) {
         if(guess.length < 5){
-            return [...guess, {letter: key, inWord: false, inPosition: false}]
+            return [...guess, {letter: key, inWord: null, inPosition: null}]
           }
       }
       return guess;
@@ -247,6 +247,9 @@ function App() {
                 letterList.splice(letterList.indexOf(letterToMatch.letter), 1, null);
               }
             }
+          } else {
+            currentGuess[i].inWord = false;
+            currentGuess[i].inPosition = false;
           }
         }
       })
